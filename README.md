@@ -27,8 +27,7 @@ flowchart LR
 
 ### Requirements
 
-| Software | Purpose | 
-|---|---|---|
+
 | SPIRO | automated plate imaging | 
 | [Fiji / ImageJ](https://fiji.sc) | preprocessing macro | 
 | [Ilastik](https://www.ilastik.org) | segmentation and root tip tracking | 
