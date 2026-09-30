@@ -20,45 +20,21 @@ flowchart LR
     D --> E[R analysis<br/>elongation, growth rate, cosinor]
 ```
 
-All experiment-specific settings (plates, conditions, excluded roots, calibration, time intervals) are defined in **one config file**, so the same scripts can be used for any number of plates and conditions.
 
 ---
 
 # Getting started
 
-### Repository structure
-
-```
-spiro-root-growth/
-├── README.md
-├── config.R                               # all experiment-specific settings
-├── fiji/
-│   └── SPIRO_Preprocessing_DayNight.ijm   # drift correction and cropping
-├── ilastik/
-│   └── README.md                          # training recommendations
-├── R/
-│   ├── TODO_01_import_and_clean.R         # TODO: rename to your script names
-│   ├── TODO_02_total_elongation.R
-│   └── TODO_03_growth_rhythmicity.R
-├── example/                               # config and results of an example experiment
-├── data/                                  # your Ilastik exports go here (not tracked by git)
-└── results/                               # figures and tables written by the scripts
-```
-
 ### Requirements
 
-| Software | Purpose | Version |
+| Software | Purpose | 
 |---|---|---|
-| SPIRO | automated plate imaging | TODO |
-| [Fiji / ImageJ](https://fiji.sc) | preprocessing macro | TODO |
-| [Ilastik](https://www.ilastik.org) | segmentation and root tip tracking | TODO |
+| SPIRO | automated plate imaging | 
+| [Fiji / ImageJ](https://fiji.sc) | preprocessing macro | 
+| [Ilastik](https://www.ilastik.org) | segmentation and root tip tracking | 
 | R | analysis | ≥ 4.6 |
-| circacompare | cosinor rhythmicity analysis | TODO |
-| tidyverse | data handling and plotting | ≥ 2.0.0 |
+| circacompare | cosinor rhythmicity analysis | 
 
-```r
-install.packages(c("tidyverse", "circacompare"))
-```
 
 ---
 
@@ -69,15 +45,12 @@ The analysis works with any number of plates and conditions. For reliable tracki
 * **Space seedlings 5–10 mm apart** so that roots do not touch or cross during the experiment.
 * **Keep a margin of about 1.5 cm from the plate edges** free of seedlings. This avoids edge effects on growth and keeps the plate border out of the crop region later.
 * **Avoid labels, marker lines or tape** in the area where roots will grow.
-* **Randomise seedlings across plates** and use at least two plates per condition, so that plate effects can be separated from treatment effects.
-
-Note the plate numbers and their conditions. They are entered in `config.R` in Step 5.
-
+* **A maximum of 4 plates** can be imaged at the same time
 ---
 
 # Step 2: Image the plates with SPIRO
 
-Place the plates in SPIRO and image them at a fixed interval (hourly is recommended for rhythmicity analysis).
+Place the plates in SPIRO and image them at a fixed interval (hourly is recommended for rhythmicity analysis). 
 
 Under light–dark cycles, SPIRO takes day images under white light and night images under green light. Use different camera settings for the two, and keep the focus constant. Settings that worked in the example experiment:
 
@@ -90,7 +63,7 @@ Under light–dark cycles, SPIRO takes day images under white light and night im
 
 Record the **zeitgeber time (ZT) of the first image** and when lights go on and off. The analysis needs these to place time points in the light–dark cycle.
 
-> TODO: describe the SPIRO output folder structure and file naming.
+Before starting, give the experiment a name in the SPIRO interface. SPIRO creates a folder with this name, and inside it a separate folder for each plate. The images of each plate are saved automatically to its own folder:
 
 ---
 
@@ -99,10 +72,10 @@ Record the **zeitgeber time (ZT) of the first image** and when lights go on and 
 Run `fiji/SPIRO_Preprocessing_DayNight.ijm` once per plate:
 
 1. Open Fiji, go to **Plugins → Macros → Run…**, and select `SPIRO_Preprocessing_DayNight.ijm`.
-2. Select the folder with the SPIRO images of one plate. TODO: confirm the input and output folder prompts.
-3. **Drift correction:** the macro asks whether to correct for drift between time points. Use it if the plate moved slightly during the experiment. TODO: describe what the correction does, e.g. registration to the first frame.
+2. Select the experiment folder created by SPIRO, which contains all the subfolders for each plate.
+3. **Drift correction:** the macro asks whether to correct for drift between time points. Use it if the plate moved slightly during the experiment. 
 4. **Crop:** the macro asks you to draw the crop region. This step determines how well Ilastik can segment and track the roots:
-   * **Include only the roots.** Shoots must not be in the crop, because Ilastik would segment leaves and hypocotyls as additional objects.
+   * **Include only the roots.** Shoots must not be in the crop, because this would lead to segmentation problem in Ilastik.
    * **Keep a distance from the plate corners and edges**, and from any other marks on the plate such as condensation, scratches or labels. These create false objects and tracking errors in Ilastik.
    * **Leave enough space below the root tips** for the whole experiment. Check the last image of the series before confirming the crop, since roots must not grow out of the region.
 
@@ -121,50 +94,6 @@ Use Ilastik's **Pixel Classification + Object Classification** workflow for each
 
 The root tip position is taken as **`Max_1`**, the maximum y-coordinate of the bounding box, i.e. the lowest point of the root.
 
-A trained project can be reused for later experiments with the same imaging setup. Retrain it if the illumination, camera settings or background change.
-
-> TODO: add the export format and a few example rows of the exported table.
-
----
-
-# Step 5: Configure the experiment
-
-Open `config.R` and fill in the settings for your experiment. This is the only file you need to edit.
-
-```r
-# --- Plates and conditions --------------------------------------------------
-plates <- data.frame(
-  file      = c("plate1.csv", "plate2.csv", "plate3.csv", "plate4.csv"),
-  plate     = c("Plate 1",    "Plate 2",    "Plate 3",    "Plate 4"),
-  condition = c("Treatment",  "Treatment",  "Control",    "Control")
-)
-reference_condition <- "Control"
-
-# --- Roots excluded after visual inspection (see Step 6) --------------------
-excluded_roots <- data.frame(
-  plate = c("Plate 1", "Plate 2", "Plate 2"),
-  label = c(7,          2,         6)
-)
-
-# --- Image calibration and cleaning -----------------------------------------
-px_per_cm       <- 192   # pixels per cm on the cropped images
-max_jump_px     <- 10    # time points with larger hourly movement are removed as artefacts
-frame_interval_h <- 1    # hours between images
-
-# --- Light-dark cycle -------------------------------------------------------
-first_image_zt <- 2      # ZT of the first image
-photoperiod_h  <- 12     # hours of light per cycle
-period_h       <- 24     # period used for the cosinor fit
-
-# --- Time windows for rhythmicity analysis (hours from first image) ---------
-acclimation_end <- 48    # time points before this are excluded
-intervals <- list(
-  early = c(48, 94),
-  late  = c(94, 165)
-)
-```
-
-> TODO: adapt the variable names to those used in your scripts.
 
 ---
 
@@ -176,7 +105,6 @@ Inspect the tracking of every plate visually, e.g. by overlaying the Ilastik obj
 * a root that lost or switched its label,
 * a root that grew out of the crop region.
 
-Enter the excluded plate and label combinations in `excluded_roots` in `config.R`. Label numbers can change if the images are reprocessed, so repeat this check after any change to Steps 3 or 4.
 
 ---
 
