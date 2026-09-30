@@ -106,62 +106,34 @@ Inspect the tracking of every plate visually, e.g. by overlaying the Ilastik obj
 * a root that grew out of the crop region.
 
 
----
 
-# Step 7: Analyse root growth in R
 
-Run the scripts in order from the repository root:
+# Step 7: Run the analysis in R
+
+Run the script from the repository root:
 
 ```r
-source("R/TODO_01_import_and_clean.R")
-source("R/TODO_02_total_elongation.R")
-source("R/TODO_03_growth_rhythmicity.R")
+source("R/root_growth_analysis.R")
 ```
 
-### 7.1 Import and clean
+The script works in four parts. All figures are saved to `figures/root_length_growth/`.
 
-This script:
-* reads the Ilastik exports listed in `config.R`,
-* removes the excluded roots,
-* discards time points where a root moves more than `max_jump_px` within one interval (tracking artefacts),
-* converts pixels to millimetres using `px_per_cm`.
+### 7.1 Clean the tracking data
 
-It writes a cleaned table with one row per root and time point to `results/`.
+1. **One object per root and time point:** if Ilastik splits a root into several fragments, only the largest fragment is kept.
+2. **Time window:** only time points between `T_START` and `T_END` are used.
+3. **Tracking artefacts:** time points where the root tip moves more than `MAX_Y_JUMP` px within one hour are removed, and the hourly growth is recalculated.
+4. **Units:** positions and growth are converted from pixels to millimetres.
 
-### 7.2 Total elongation
+The following script analyses: 
 
-This script:
-* calculates total elongation per root as the final minus the initial tip position,
-* compares each condition with `reference_condition` using a **two-sided Wilcoxon rank-sum test**.
+1.Individual roots
+2.Growth per condition
+3.Rhythmicity of growth
 
-It produces three plots:
-* mean cumulative growth per condition (± SEM),
-* total elongation per root, coloured by plate,
-* daily growth per root, stacked by day.
 
-### 7.3 Growth rate and rhythmicity
 
-This script:
-* calculates the growth rate per interval (mm per hour) and smooths it with loess,
-* excludes the acclimation period (`acclimation_end`),
-* fits a cosinor model with `circacompare` at `period_h` for every interval in `intervals`, and compares each condition with the reference,
-* averages the growth rate by hour of day to show the mean diurnal profile.
 
-**Output:** a table with rhythmicity p-value, mesor, amplitude and phase per condition and interval, plus plots of growth rate over time and of the averaged diurnal profile, with light and dark phases shaded.
-
-Growth right after moving plates is often erratic, so choose `acclimation_end` by looking at the growth-rate plot before interpreting the cosinor results.
-
----
-
-# Example
-
-The `example/` folder contains the configuration and main results of the experiment this workflow was developed for: four plates, two conditions, hourly imaging for 165 h under LD 12:12, and 16 vs 15 roots after curation.
-
-It is described in the Master's thesis *"TOR kinase shapes the timing of rhythmic outputs in Arabidopsis roots"* (Valentin Rebernig, Centre for Organismal Studies, Heidelberg University, 2026), Sections 2.3 and 3.2. Use it to check that the workflow runs correctly on your system.
-
-> TODO: add the example config and, if possible, the Ilastik exports (small CSV files) so the R part can be run without images.
-
----
 
 ## Tips and common problems
 
@@ -172,12 +144,7 @@ It is described in the Master's thesis *"TOR kinase shapes the timing of rhythmi
 
 ## Citation
 
-If you use this workflow, please cite the tools it builds on:
-
 * Ohlsson, J.A. et al. (2021) SPIRO – the automated Petri plate imaging platform designed by biologists, for biologists. *bioRxiv*. https://doi.org/10.1101/2021.03.15.435343
 * Berg, S. et al. (2019) ilastik: interactive machine learning for (bio)image analysis. *Nature Methods* 16, 1226–1232. https://doi.org/10.1038/s41592-019-0582-9
 * Parsons, R. et al. (2020) CircaCompare: a method to estimate and statistically support differences in mesor, amplitude and phase, between circadian rhythms. *Bioinformatics* 36, 1208–1212. https://doi.org/10.1093/bioinformatics/btz730
 
-## License
-
-TODO (e.g. MIT)
