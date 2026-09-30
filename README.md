@@ -1,5 +1,5 @@
 # spiro-root-growth
-It is a workflow for measuring primary root growth and its diurnal rhythm from time-lapse images of Arabidopsis seedlings on agar plate
+A workflow for measuring primary root growth and its diurnal rhythm from time-lapse images of Arabidopsis seedlings on agar plate
 
 # Overview
 
