@@ -27,11 +27,12 @@ flowchart LR
 
 ### Requirements
 
-
+| Tool | Use |
+|---|---|
 | SPIRO | automated plate imaging | 
 | [Fiji / ImageJ](https://fiji.sc) | preprocessing macro | 
 | [Ilastik](https://www.ilastik.org) | segmentation and root tip tracking | 
-| R | analysis | ≥ 4.6 |
+| R | analysis |
 | circacompare | cosinor rhythmicity analysis | 
 
 
@@ -68,7 +69,7 @@ Before starting, give the experiment a name in the SPIRO interface. SPIRO create
 
 # Step 3: Preprocess the images in Fiji
 
-Run `fiji/SPIRO_Preprocessing_DayNight.ijm` once per plate:
+Run `SPIRO_Preprocessing_DayNight.ijm` once per plate:
 
 1. Open Fiji, go to **Plugins → Macros → Run…**, and select `SPIRO_Preprocessing_DayNight.ijm`.
 2. Select the experiment folder created by SPIRO, which contains all the subfolders for each plate.
@@ -96,6 +97,15 @@ The root tip position is taken as **`Max_1`**, the maximum y-coordinate of the b
 
 ---
 
+# Step 7: Run the analysis in R
+
+Run the script from the repository root:
+
+```r
+source(root_growth_analysis.R")
+```
+
+
 # Step 6: Curate the tracking manually
 
 Inspect the tracking of every plate visually, e.g. by overlaying the Ilastik object labels on the images. Exclude roots that were mis-tracked, for example:
@@ -105,17 +115,6 @@ Inspect the tracking of every plate visually, e.g. by overlaying the Ilastik obj
 * a root that grew out of the crop region.
 
 
-
-
-# Step 7: Run the analysis in R
-
-Run the script from the repository root:
-
-```r
-source("R/root_growth_analysis.R")
-```
-
-The script works in four parts. All figures are saved to `figures/root_length_growth/`.
 
 ### 7.1 Clean the tracking data
 
