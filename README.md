@@ -1,5 +1,5 @@
 # spiro-root-growth
-A workflow for measuring primary root growth and its diurnal rhythm from time-lapse images of Arabidopsis seedlings on agar plate
+A workflow for measuring primary root growth and its diurnal rhythm from time-lapse images of Arabidopsis seedlings on agar plate.
 
 # Overview
 
@@ -10,7 +10,7 @@ A workflow for measuring primary root growth and its diurnal rhythm from time-la
 * hourly growth rates over the full time course,
 * cosinor-based rhythmicity analysis of growth rate (mesor, amplitude, phase) in user-defined time intervals.
 
-The workflow has three stages:
+The workflow:
 
 ```mermaid
 flowchart LR
