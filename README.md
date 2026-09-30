@@ -115,9 +115,9 @@ source(root_growth_analysis.R")
 
 The following script analyses: 
 
-1.Individual roots
-2.Growth per condition
-3.Rhythmicity of growth
+1. Individual roots
+2. Growth per condition
+3. Rhythmicity of growth
 
 
 
@@ -135,4 +135,12 @@ The following script analyses:
 * Ohlsson, J.A. et al. (2021) SPIRO – the automated Petri plate imaging platform designed by biologists, for biologists. *bioRxiv*. https://doi.org/10.1101/2021.03.15.435343
 * Berg, S. et al. (2019) ilastik: interactive machine learning for (bio)image analysis. *Nature Methods* 16, 1226–1232. https://doi.org/10.1038/s41592-019-0582-9
 * Parsons, R. et al. (2020) CircaCompare: a method to estimate and statistically support differences in mesor, amplitude and phase, between circadian rhythms. *Bioinformatics* 36, 1208–1212. https://doi.org/10.1093/bioinformatics/btz730
+
+
+
+
+
+
+
+
 
