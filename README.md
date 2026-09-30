@@ -97,7 +97,7 @@ The root tip position is taken as **`Max_1`**, the maximum y-coordinate of the b
 
 ---
 
-# Step 7: Run the analysis in R
+# Step 5: Run the analysis in R
 
 Run the script from the repository root:
 
@@ -106,17 +106,7 @@ source(root_growth_analysis.R")
 ```
 
 
-# Step 6: Curate the tracking manually
-
-Inspect the tracking of every plate visually, e.g. by overlaying the Ilastik object labels on the images. Exclude roots that were mis-tracked, for example:
-
-* two roots merged into one object,
-* a root that lost or switched its label,
-* a root that grew out of the crop region.
-
-
-
-### 7.1 Clean the tracking data
+### 5.1 Clean the tracking data
 
 1. **One object per root and time point:** if Ilastik splits a root into several fragments, only the largest fragment is kept.
 2. **Time window:** only time points between `T_START` and `T_END` are used.
