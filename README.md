@@ -1,8 +1,6 @@
 # spiro-root-growth
 It is a workflow for measuring primary root growth and its diurnal rhythm from time-lapse images of Arabidopsis seedlings on agar plate
 
-# spiro-root-growth
-
 # Overview
 
 `spiro-root-growth` is a workflow for measuring primary root growth and its diurnal rhythm from time-lapse images of *Arabidopsis* seedlings on agar plates. It takes raw images from the [SPIRO](https://doi.org/10.1101/2021.03.15.435343) imaging robot and produces:
